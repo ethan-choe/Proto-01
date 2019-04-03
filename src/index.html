@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overflow: hidden;
+      }
+
+      #start-scene {
+        position: absolute;
+        color: cyan;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id = "start-scene" class = "hidden">
+      <h1> Flip </h1>
+      <h2> Press SPACE to start </h2>
+
+    </div>
+  </body>
+
+  <script>
+    const game = require('./Game');
+    window.onload = () => { setTimeout(() => game.init(), 500); };
+  </script>
+</html>

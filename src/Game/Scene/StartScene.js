@@ -9,13 +9,13 @@ class StartScene extends Phaser.Scene {
     this.overlay = document.querySelector('#start-scene');
     this.overlay.classList.remove('hidden');
 
-    this.keys = {
+    this.cursors = {
       space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
     };
   }
 
   update() {
-    if (this.keys.space.isDown) {
+    if (this.cursors.space.isDown) {
       this.overlay.classList.add('hidden');
       // Transition to gameplay
       this.scene.start('Lvl1Scene')

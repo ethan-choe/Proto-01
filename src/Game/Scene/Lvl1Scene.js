@@ -9,34 +9,39 @@ let player;
 let cursors;
 
 const plat1Config = [
-  { x: 200, y: 400, asset: 'ground' },
-  { x: 200, y: 300, asset: 'ground' },
-  { x: 200, y: 200, asset: 'ground' }
+  { x: 50, y: 500, asset: 'short1' },
+  { x: 350, y: 400, asset: 'short1' },
+  { x: 650, y: 300, asset: 'short1' },
+  { x: 350, y: 200, asset: 'short1' },
+  { x: 650, y: 150, asset: 'short1' }
 ]
 const plat2Config = [
-  { x: 600, y: 350, asset: 'ground' },
-  { x: 600, y: 250, asset: 'ground' },
-  { x: 600, y: 150, asset: 'ground' }
+  { x: 200, y: 450, asset: 'short2' },
+  { x: 500, y: 350, asset: 'short2' },
+  { x: 500, y: 250, asset: 'short2' },
+  { x: 500, y: 150, asset: 'short2' }
 ]
 
 class lvl1Scene extends Phaser.Scene {
     constructor() {
       super('Lvl1Scene');
-      console.log('setup')
+    //   console.log('setup')
     }
 
     preload () {
         this.load.image('ground', '../assets/platform.png');
+        this.load.image('short1', '../assets/plat1-short.png');
+        this.load.image('short2', '../assets/plat2-short.png');
+        this.load.image('wall1', '../assets/plat1-wall.png');
+        this.load.image('wall2', '../assets/plat2-wall.png');
         this.load.spritesheet('dude', 
             '../assets/dude.png',
             { frameWidth: 32, frameHeight: 48 }
         );
     }
     create () {
-        this.overlay = document.querySelector('#Lvl1-scene');
-        this.overlay.classList.remove('hidden');
 
-        console.log('l1')
+        // console.log('l1')
         this.cursors = {
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
             right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
@@ -118,6 +123,11 @@ class lvl1Scene extends Phaser.Scene {
             }
         }
         this.isLastSpaceDown = this.cursors.space.isDown;
+
+        if (this.cursors.down.isDown) {
+            // Transition to gameplay
+            this.scene.start('Lvl2Scene')
+          }
     }
 }
 

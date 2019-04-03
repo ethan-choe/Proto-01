@@ -34,6 +34,7 @@ const game = new Phaser.Game(config);
 // Exported Module so game can be initialized elseware
 const gameManager = {
   init: () => {
+    console.log(game)
     input$.subscribe({
       next: (command) => {
         // Parse Arduino commands
@@ -53,14 +54,24 @@ const gameManager = {
         if (command === 'j' && player.body.touching.down) {
           player.setVelocityY(-250);
         }
-        if (command === 't') {
-          this.plat1.activate(); 
-          this.plat2.deactivate();
+        if (command === 't' && !this.isLastSpaceDown) {
+          // this.plat1.activate(); 
+          // this.plat2.deactivate();
+          for(var i = 1; i < 4; i++) {
+            game.scene.scenes[i].plat1.activate();
+            game.scene.scenes[i].plat2.deactivate();
+          }
         }
-        else if (command === 'r') {
-          this.plat1.deactivate();
-          this.plat2.activate();
+        else if (command === 'r' && !this.isLastSpaceDown) {
+          // this.plat1.deactivate();
+          // this.plat2.activate();
+          for(var i = 1; i < 4; i++) {
+            game.scene.scenes[i].plat2.activate();
+            game.scene.scenes[i].plat1.deactivate();
+          }
         }
+
+        this.isLastSpaceDown = this.cursors.space.isDown
       },
       error: console.log,
       complete: console.log,

@@ -23,6 +23,7 @@ const plat1Config = [
   { x: 375, y: 300, asset: 'short1' },
   { x: 375, y: 450, asset: 'short1' },
   { x: 525, y: 450, asset: 'short1' },
+  { x: 750, y: 400, asset: 'door' }
 
 ]
 const plat2Config = [
@@ -32,7 +33,9 @@ const plat2Config = [
   { x: 375, y: 150, asset: 'short2' },
 
   { x: 700, y: 450, asset: 'short2' },
-  { x: 750, y: 450, asset: 'short2' }
+  { x: 750, y: 450, asset: 'short2' },
+
+  { x: 750, y: 400, asset: 'door' }
 
 ]
 
@@ -47,6 +50,7 @@ class lvl2Scene extends Phaser.Scene {
         this.load.image('short2', '../assets/plat2-short.png');
         this.load.image('wall1', '../assets/plat1-wall.png');
         this.load.image('wall2', '../assets/plat2-wall.png');
+        this.load.image('door', '../assets/door.png');
         this.load.spritesheet('dude', 
             '../assets/dude.png',
             { frameWidth: 32, frameHeight: 48 }
@@ -138,7 +142,7 @@ class lvl2Scene extends Phaser.Scene {
 
         if (this.cursors.down.isDown) {
             // Transition to gameplay
-            this.scene.start('Lvl3Scene')
+            this.scene.start('EndScene')
           }
     }
 }

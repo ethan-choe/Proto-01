@@ -1,32 +1,57 @@
+int tiltpin = 2;
+int buttJpin = 7;
+int buttLpin = 4;
+int buttRpin = 8;
 
-int butt;
-int swtch;
+int tilt;
+int buttJ;
+int buttL;
+int buttR;
 
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
-  pinMode(7, INPUT);
-  pinMode(4, INPUT);
-  
+  pinMode(tiltpin, INPUT_PULLUP);
+  pinMode(buttJpin, INPUT);
+  pinMode(buttLpin, INPUT);
+  pinMode(buttRpin, INPUT);
 }
-
-void loop() {
-  // Demo of each command
-  butt = digitalRead(4);
-  swtch = digitalRead(7);
+ 
+void loop()
+{
+  tilt = digitalRead(tiltpin);
+  buttJ = digitalRead(buttJpin);
+  buttL = digitalRead(buttLpin);
+  buttR = digitalRead(buttRpin);
   
-  if(swtch == HIGH)
-  {
-    Serial.print("l-");
+  // Flip
+//   Serial.print(tilt);
+  if(tilt == HIGH) {
+    Serial.print("b~");
   }
   else
   {
-    Serial.print("r-");
+    Serial.print("t~");
   }
 
-  if(butt == HIGH)
+//  // Movement
+  if(buttJ == HIGH)
   {
-    Serial.print("j-");
+    Serial.print("j~");  
   }
+  if(buttL == HIGH)
+  {
+    Serial.print("l~");
+  }
+  if(buttR == HIGH)
+  {
+    Serial.print("r~");
+  }
+  else
+  {
+    Serial.print("s~");
+  }
+  
   delay(200);
 }

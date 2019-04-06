@@ -1,10 +1,15 @@
 const Phaser = require('phaser');
 
+const SerialPortReader = require('../SerialPortReader.js')
 class StartScene extends Phaser.Scene {
   constructor() {
     super('EndScene');
+    SerialPortReader.addListener(this.onSerialMessage.bind(this));
   }
 
+  onSerialMessage(msg) {
+    this.serialMsg = msg;
+  }
   create() {
     this.overlay = document.querySelector('#end-scene');
     this.overlay.classList.remove('hidden');
@@ -15,11 +20,17 @@ class StartScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.cursors.space.isDown) {
+    if (this.serialMsg === 'j') {
       this.overlay.classList.add('hidden');
       // Transition to gameplay
       this.scene.start('Lvl1Scene')
     }
+
+    // if (this.cursors.space.isDown) {
+    //   this.overlay.classList.add('hidden');
+    //   // Transition to gameplay
+    //   this.scene.start('Lvl1Scene')
+    // }
   }
 }
 

@@ -1,8 +1,14 @@
 const Phaser = require('phaser');
+const SerialPortReader = require('../SerialPortReader');
 
 class StartScene extends Phaser.Scene {
   constructor() {
     super('StartScene');
+    SerialPortReader.addListener(this.onSerialMessage.bind(this));
+  }
+
+  onSerialMessage(msg) {
+    this.serialMsg = msg;
   }
 
   create() {
@@ -20,6 +26,9 @@ class StartScene extends Phaser.Scene {
       // Transition to gameplay
       this.scene.start('Lvl1Scene')
     }
+
+    // Process this.serialMsg here
+    console.log(this.serialMsg);
   }
 }
 

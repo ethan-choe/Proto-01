@@ -2,6 +2,7 @@
 const Phaser = require('phaser');
 
 // Import Actors
+const SerialPortReader = require('../SerialPortReader.js')
 const PlatformSet = require('../PlatformSet.js')
 
 // Phaser setup
@@ -29,6 +30,11 @@ class lvl1Scene extends Phaser.Scene {
     constructor() {
       super('Lvl1Scene');
     //   console.log('setup')
+        SerialPortReader.addListener(this.onSerialMessage.bind(this));
+    }
+
+    onSerialMessage(msg) {
+        this.serialMsg = msg;
     }
 
     preload () {
@@ -90,48 +96,95 @@ class lvl1Scene extends Phaser.Scene {
     }
 
     update(_,deltaTime) {
-        // Un-comment this block for keyboard controls
-
-        this.plat1.update(deltaTime);
-        this.plat2.update(deltaTime);
-
-        if (this.cursors.left.isDown) {
+        // Process this.serialMsg here
+        if (this.serialMsg === 'l') {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
         }
-        else if (this.cursors.right.isDown) {
+        else if (this.serialMsg === 'r') {
             this.player.setVelocityX(90);
             this.player.anims.play('right', true);
         }
-        else {
+        else if (this.serialMsg === 's'){
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
-        if (this.cursors.up.isDown && this.player.body.touching.down) {
+        if (this.serialMsg === 'j') {
             this.player.setVelocityY(-250);
         }
 
         // was space down (reference tank game)
-        if (this.cursors.space.isDown && !this.isLastSpaceDown)
+        if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
         {
             if(this.plat2.isActive)
             {
                 this.plat1.activate(); 
                 this.plat2.deactivate();
-            }
-            else
-            {
-                this.plat1.deactivate();
-                this.plat2.activate();
+                // for(var i = 1; i < 4; i++) {
+                //     game.scene.scenes[i].plat2.activate();
+                //     game.scene.scenes[i].plat1.deactivate();
+                // }
             }
         }
-        this.isLastSpaceDown = this.cursors.space.isDown;
+        else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
+        {
+            if(this.plat1.isActive)
+            {
+                this.plat2.activate(); 
+                this.plat1.deactivate();
+                // for(var i = 1; i < 4; i++) {
+                //     game.scene.scenes[i].plat2.activate();
+                //     game.scene.scenes[i].plat1.deactivate();
+                // }
+            }
+        }
+        // this.isLastSpaceDown = this.cursors.space.isDown;
 
         if (this.cursors.down.isDown) {
             // Transition to gameplay
             this.scene.start('Lvl2Scene')
-          }
+        }
+        this.plat1.update(deltaTime);
+        this.plat2.update(deltaTime);
+        // // Un-comment this block for keyboard controls
+        // if (this.cursors.left.isDown) {
+        //     this.player.setVelocityX(-90);
+        //     this.player.anims.play('left', true);
+        // }
+        // else if (this.cursors.right.isDown) {
+        //     this.player.setVelocityX(90);
+        //     this.player.anims.play('right', true);
+        // }
+        // else {
+        //     this.player.setVelocityX(0);
+        //     this.player.anims.play('turn');
+        // }
+
+        // if (this.cursors.up.isDown && this.player.body.touching.down) {
+        //     this.player.setVelocityY(-250);
+        // }
+
+        // // was space down (reference tank game)
+        // if (this.cursors.space.isDown && !this.isLastSpaceDown)
+        // {
+        //     if(this.plat2.isActive)
+        //     {
+        //         this.plat1.activate(); 
+        //         this.plat2.deactivate();
+        //     }
+        //     else
+        //     {
+        //         this.plat1.deactivate();
+        //         this.plat2.activate();
+        //     }
+        // }
+        // this.isLastSpaceDown = this.cursors.space.isDown;
+
+        // if (this.cursors.down.isDown) {
+        //     // Transition to gameplay
+        //     this.scene.start('Lvl2Scene')
+        // }
     }
 }
 

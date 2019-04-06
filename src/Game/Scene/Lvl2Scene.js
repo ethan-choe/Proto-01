@@ -2,6 +2,7 @@
 const Phaser = require('phaser');
 
 // Import Actors
+const SerialPortReader = require('../SerialPortReader.js')
 const PlatformSet = require('../PlatformSet.js')
 
 // Phaser setup
@@ -42,8 +43,12 @@ const plat2Config = [
 class lvl2Scene extends Phaser.Scene {
     constructor() {
       super('Lvl2Scene');
+      SerialPortReader.addListener(this.onSerialMessage.bind(this));
     }
 
+    onSerialMessage(msg) {
+        this.serialMsg = msg;
+    }
     preload () {
         this.load.image('ground', '../assets/platform.png');
         this.load.image('short1', '../assets/plat1-short.png');
@@ -107,38 +112,41 @@ class lvl2Scene extends Phaser.Scene {
         this.plat1.update(deltaTime);
         this.plat2.update(deltaTime);
 
-        if (this.cursors.left.isDown) {
+        // Process this.serialMsg here
+        if (this.serialMsg === 'l') {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
         }
-        else if (this.cursors.right.isDown) {
+        else if (this.serialMsg === 'r') {
             this.player.setVelocityX(90);
             this.player.anims.play('right', true);
         }
-        else {
+        else if (this.serialMsg === 's'){
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
-        if (this.cursors.up.isDown && this.player.body.touching.down) {
+        if (this.serialMsg === 'j') {
             this.player.setVelocityY(-250);
         }
 
         // was space down (reference tank game)
-        if (this.cursors.space.isDown && !this.isLastSpaceDown)
+        if (this.serialMsg === 't')
         {
             if(this.plat2.isActive)
             {
                 this.plat1.activate(); 
                 this.plat2.deactivate();
             }
-            else
+        }
+        else if (this.serialMsg === 'b')
+        {
+            if(this.plat1.isActive)
             {
+                this.plat2.activate(); 
                 this.plat1.deactivate();
-                this.plat2.activate();
             }
         }
-        this.isLastSpaceDown = this.cursors.space.isDown;
 
         if (this.cursors.down.isDown) {
             // Transition to gameplay

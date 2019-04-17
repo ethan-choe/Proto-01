@@ -49,16 +49,16 @@ class lvl1Scene extends Phaser.Scene {
 
         //Sound
 
-        this.load.audio('flip', '..assets/teleport-high.wav');
-        // this.load.audio('jump', ['..assets/sand-jump.aiff']);
-        // this.load.audio('soundtrack', '..assets/393520__frankum__ambient-guitar-x1-loop-mode.mp3');
+        this.load.audio('flip', '../assets/teleport-high.wav');
+        this.load.audio('jump', '../assets/sand-jump.wav');
+        this.load.audio('soundtrack', '../assets/393520__frankum__ambient-guitar-x1-loop-mode.mp3');
     }
     create () {
 
         // Play Background Sound
         // var music = this.sound.add('soundtrack');
         // music.play();
-        // this.music.play('soundtrack', {loop: true});
+        this.sound.play('soundtrack', {volume: 0.5, loop: true});
 
         this.add.image(650,100,'door');
         // console.log('l1')
@@ -176,7 +176,7 @@ class lvl1Scene extends Phaser.Scene {
 
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             this.player.setVelocityY(-250);
-            // this.sound.play('jump', {start: 0, duration: 0.1});
+            this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.000001});
         }
 
         // was space down (reference tank game)
@@ -192,7 +192,7 @@ class lvl1Scene extends Phaser.Scene {
                 this.plat1.deactivate();
                 this.plat2.activate();
             }
-            this.sound.play('flip', /*{start: 0, duration: 0.1}*/);
+            this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
         }
         this.isLastSpaceDown = this.cursors.space.isDown;
 

@@ -29,10 +29,26 @@ void loop()
 //   Serial.print(tilt);
   if(tilt == HIGH) {
     Serial.print("b~");
+    if(buttL == HIGH)
+    {
+      Serial.print("l~");
+    }
+    if(buttR == HIGH)
+    {
+      Serial.print("r~");
+    }
   }
   else
   {
-    Serial.print("t~");
+//    Serial.print("t~");
+    if(buttL == HIGH)
+    {
+      Serial.print("r~");
+    }
+    if(buttR == HIGH)
+    {
+      Serial.print("l~");
+    }
   }
 
 //  // Movement
@@ -40,17 +56,17 @@ void loop()
   {
     Serial.print("j~");  
   }
-  if(buttL == HIGH)
-  {
-    Serial.print("l~");
-  }
-  if(buttR == HIGH)
-  {
-    Serial.print("r~");
-  }
+//  if(buttL == HIGH)
+//  {
+//    Serial.print("l~");
+//  }
+//  if(buttR == HIGH)
+//  {
+//    Serial.print("r~");
+//  }
   else
   {
-    Serial.print("s~");
+//    Serial.print("s~");
   }
   
   delay(200);

@@ -23,8 +23,7 @@ const plat1Config = [
   { x: 375, y: 200, asset: 'short1' },
   { x: 375, y: 300, asset: 'short1' },
   { x: 375, y: 450, asset: 'short1' },
-  { x: 525, y: 450, asset: 'short1' },
-  { x: 750, y: 400, asset: 'door' }
+  { x: 525, y: 450, asset: 'short1' }
 
 ]
 const plat2Config = [
@@ -34,9 +33,7 @@ const plat2Config = [
   { x: 375, y: 150, asset: 'short2' },
 
   { x: 700, y: 450, asset: 'short2' },
-  { x: 750, y: 450, asset: 'short2' },
-
-  { x: 750, y: 400, asset: 'door' }
+  { x: 750, y: 450, asset: 'short2' }
 
 ]
 
@@ -50,11 +47,12 @@ class lvl2Scene extends Phaser.Scene {
         this.serialMsg = msg;
     }
     preload () {
-        this.load.image('ground', '../assets/platform.png');
-        this.load.image('short1', '../assets/plat1-short.png');
-        this.load.image('short2', '../assets/plat2-short.png');
-        this.load.image('wall1', '../assets/plat1-wall.png');
-        this.load.image('wall2', '../assets/plat2-wall.png');
+        this.load.image('groundT', '../assets/tground.png');
+        this.load.image('groundB', '../assets/bground.png');
+        this.load.image('short1', '../assets/tground1.png');
+        this.load.image('short2', '../assets/nplatt.png');
+        this.load.image('wall1', '../assets/wallt.png');
+        this.load.image('wall2', '../assets/wallb.png');
         this.load.image('door', '../assets/door.png');
         this.load.spritesheet('dude', 
             '../assets/dude.png',
@@ -62,6 +60,8 @@ class lvl2Scene extends Phaser.Scene {
         );
     }
     create () {
+
+        this.add.image(750,400,'door');
 
         this.cursors = {
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
@@ -78,8 +78,8 @@ class lvl2Scene extends Phaser.Scene {
         this.player.body.setGravityY(270);
 
         //Platforms
-        this.plat1 = new PlatformSet(this, plat1Config, player);
-        this.plat2 = new PlatformSet(this, plat2Config, player);
+        this.plat1 = new PlatformSet(this, plat1Config, player, 'groundT');
+        this.plat2 = new PlatformSet(this, plat2Config, player, 'groundB');
 
         this.plat1.activate();
         this.plat2.deactivate();
@@ -107,51 +107,89 @@ class lvl2Scene extends Phaser.Scene {
     }
 
     update(_,deltaTime) {
-        // Un-comment this block for keyboard controls
 
         this.plat1.update(deltaTime);
         this.plat2.update(deltaTime);
 
         // Process this.serialMsg here
-        if (this.serialMsg === 'l') {
+        // if (this.serialMsg === 'l') {
+        //     this.player.setVelocityX(-90);
+        //     this.player.anims.play('left', true);
+        // }
+        // else if (this.serialMsg === 'r') {
+        //     this.player.setVelocityX(90);
+        //     this.player.anims.play('right', true);
+        // }
+        // else if (this.serialMsg === 's'){
+        //     this.player.setVelocityX(0);
+        //     this.player.anims.play('turn');
+        // }
+
+        // if (this.serialMsg === 'j') {
+        //     this.player.setVelocityY(-250);
+        // }
+
+        // // was space down (reference tank game)
+        // if (this.serialMsg === 't')
+        // {
+        //     if(this.plat2.isActive)
+        //     {
+        //         this.plat1.activate(); 
+        //         this.plat2.deactivate();
+        //     }
+        // }
+        // else if (this.serialMsg === 'b')
+        // {
+        //     if(this.plat1.isActive)
+        //     {
+        //         this.plat2.activate(); 
+        //         this.plat1.deactivate();
+        //     }
+        // }
+
+        // if (this.cursors.down.isDown) {
+        //     // Transition to gameplay
+        //     this.scene.start('EndScene')
+        //   }
+
+        // Un-comment this block for keyboard controls
+        if (this.cursors.left.isDown) {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
         }
-        else if (this.serialMsg === 'r') {
+        else if (this.cursors.right.isDown) {
             this.player.setVelocityX(90);
             this.player.anims.play('right', true);
         }
-        else if (this.serialMsg === 's'){
+        else {
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
-        if (this.serialMsg === 'j') {
+        if (this.cursors.up.isDown && this.player.body.touching.down) {
             this.player.setVelocityY(-250);
         }
 
         // was space down (reference tank game)
-        if (this.serialMsg === 't')
+        if (this.cursors.space.isDown && !this.isLastSpaceDown)
         {
             if(this.plat2.isActive)
             {
                 this.plat1.activate(); 
                 this.plat2.deactivate();
             }
-        }
-        else if (this.serialMsg === 'b')
-        {
-            if(this.plat1.isActive)
+            else
             {
-                this.plat2.activate(); 
                 this.plat1.deactivate();
+                this.plat2.activate();
             }
         }
+        this.isLastSpaceDown = this.cursors.space.isDown;
 
         if (this.cursors.down.isDown) {
             // Transition to gameplay
-            this.scene.start('EndScene')
-          }
+            this.scene.start('Lvl2Scene')
+        }
     }
 }
 

@@ -2,19 +2,20 @@
 
 
 class PlatformSet {
-    constructor(scene, lvlConfig, player) {
+    constructor(scene, lvlConfig, player, ground) {
         this.scene = scene;
         this.group = this.scene.physics.add.staticGroup();
         this.isActive = false;
 
         const platforms = this.group.children.entries;
 
-        this.group.create(400, 568, 'ground').setScale(2).refreshBody();
+        this.group.create(400, 568, ground);
         for (let i = 0; i < lvlConfig.length; i++) {
             const element = lvlConfig[i];
             this.group.create(element.x, element.y, element.asset);
             
         }
+
         this.collider = this.scene.physics.add.collider(scene.player, this.group);
         this.collider.active = false;
     }

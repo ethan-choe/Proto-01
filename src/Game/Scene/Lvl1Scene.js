@@ -14,16 +14,13 @@ const plat1Config = [
   { x: 350, y: 400, asset: 'short1' },
   { x: 650, y: 300, asset: 'short1' },
   { x: 350, y: 200, asset: 'short1' },
-  { x: 650, y: 150, asset: 'short1' },
-
-  { x: 650, y: 100, asset: 'door' }
+  { x: 650, y: 150, asset: 'short1' }
 ]
 const plat2Config = [
   { x: 200, y: 450, asset: 'short2' },
   { x: 500, y: 350, asset: 'short2' },
   { x: 500, y: 250, asset: 'short2' },
-  { x: 500, y: 150, asset: 'short2' },
-  { x: 650, y: 100, asset: 'door' }
+  { x: 500, y: 150, asset: 'short2' }
 ]
 
 class lvl1Scene extends Phaser.Scene {
@@ -38,9 +35,10 @@ class lvl1Scene extends Phaser.Scene {
     }
 
     preload () {
-        this.load.image('ground', '../assets/platform.png');
-        this.load.image('short1', '../assets/plat1-short.png');
-        this.load.image('short2', '../assets/plat2-short.png');
+        this.load.image('groundT', '../assets/tground.png');
+        this.load.image('groundB', '../assets/bground.png');
+        this.load.image('short1', '../assets/tground1.png');
+        this.load.image('short2', '../assets/nplatt.png');
         this.load.image('wall1', '../assets/plat1-wall.png');
         this.load.image('wall2', '../assets/plat2-wall.png');
         this.load.image('door', '../assets/door.png');
@@ -48,9 +46,21 @@ class lvl1Scene extends Phaser.Scene {
             '../assets/dude.png',
             { frameWidth: 32, frameHeight: 48 }
         );
+
+        //Sound
+
+        this.load.audio('flip', '..assets/teleport-high.wav');
+        // this.load.audio('jump', ['..assets/sand-jump.aiff']);
+        // this.load.audio('soundtrack', '..assets/393520__frankum__ambient-guitar-x1-loop-mode.mp3');
     }
     create () {
 
+        // Play Background Sound
+        // var music = this.sound.add('soundtrack');
+        // music.play();
+        // this.music.play('soundtrack', {loop: true});
+
+        this.add.image(650,100,'door');
         // console.log('l1')
         this.cursors = {
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
@@ -59,6 +69,8 @@ class lvl1Scene extends Phaser.Scene {
             down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
         };
+
+        this.graphics = this.add.graphics('')
         
         // Player
         this.player = this.physics.add.sprite(100, -450, 'dude');
@@ -67,8 +79,8 @@ class lvl1Scene extends Phaser.Scene {
         this.player.body.setGravityY(270);
 
         //Platforms
-        this.plat1 = new PlatformSet(this, plat1Config, player);
-        this.plat2 = new PlatformSet(this, plat2Config, player);
+        this.plat1 = new PlatformSet(this, plat1Config, player, 'groundT');
+        this.plat2 = new PlatformSet(this, plat2Config, player, 'groundB');
 
         this.plat1.activate();
         this.plat2.deactivate();
@@ -97,94 +109,97 @@ class lvl1Scene extends Phaser.Scene {
 
     update(_,deltaTime) {
         // Process this.serialMsg here
-        if (this.serialMsg === 'l') {
-            this.player.setVelocityX(-90);
-            this.player.anims.play('left', true);
-        }
-        else if (this.serialMsg === 'r') {
-            this.player.setVelocityX(90);
-            this.player.anims.play('right', true);
-        }
-        else if (this.serialMsg === 's'){
-            this.player.setVelocityX(0);
-            this.player.anims.play('turn');
-        }
-
-        if (this.serialMsg === 'j') {
-            this.player.setVelocityY(-250);
-        }
-
-        // was space down (reference tank game)
-        if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
-        {
-            if(this.plat2.isActive)
-            {
-                this.plat1.activate(); 
-                this.plat2.deactivate();
-                // for(var i = 1; i < 4; i++) {
-                //     game.scene.scenes[i].plat2.activate();
-                //     game.scene.scenes[i].plat1.deactivate();
-                // }
-            }
-        }
-        else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
-        {
-            if(this.plat1.isActive)
-            {
-                this.plat2.activate(); 
-                this.plat1.deactivate();
-                // for(var i = 1; i < 4; i++) {
-                //     game.scene.scenes[i].plat2.activate();
-                //     game.scene.scenes[i].plat1.deactivate();
-                // }
-            }
-        }
-        // this.isLastSpaceDown = this.cursors.space.isDown;
-
-        if (this.cursors.down.isDown) {
-            // Transition to gameplay
-            this.scene.start('Lvl2Scene')
-        }
-        this.plat1.update(deltaTime);
-        this.plat2.update(deltaTime);
-        // // Un-comment this block for keyboard controls
-        // if (this.cursors.left.isDown) {
+        // if (this.serialMsg === 'l') {
         //     this.player.setVelocityX(-90);
         //     this.player.anims.play('left', true);
         // }
-        // else if (this.cursors.right.isDown) {
+        // else if (this.serialMsg === 'r') {
         //     this.player.setVelocityX(90);
         //     this.player.anims.play('right', true);
         // }
-        // else {
+        // else if (this.serialMsg === 's'){
         //     this.player.setVelocityX(0);
         //     this.player.anims.play('turn');
         // }
 
-        // if (this.cursors.up.isDown && this.player.body.touching.down) {
+        // if (this.serialMsg === 'j') {
         //     this.player.setVelocityY(-250);
+        //     // this.sound.play('jump', {start: 0, duration: 0.1});
         // }
 
         // // was space down (reference tank game)
-        // if (this.cursors.space.isDown && !this.isLastSpaceDown)
+        // if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
         // {
         //     if(this.plat2.isActive)
         //     {
         //         this.plat1.activate(); 
         //         this.plat2.deactivate();
-        //     }
-        //     else
-        //     {
-        //         this.plat1.deactivate();
-        //         this.plat2.activate();
+        //         // for(var i = 1; i < 4; i++) {
+        //         //     game.scene.scenes[i].plat2.activate();
+        //         //     game.scene.scenes[i].plat1.deactivate();
+        //         // }
         //     }
         // }
-        // this.isLastSpaceDown = this.cursors.space.isDown;
+        // else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
+        // {
+        //     if(this.plat1.isActive)
+        //     {
+        //         this.plat2.activate(); 
+        //         this.plat1.deactivate();
+        //         // for(var i = 1; i < 4; i++) {
+        //         //     game.scene.scenes[i].plat2.activate();
+        //         //     game.scene.scenes[i].plat1.deactivate();
+        //         // }
+        //     }
+        // }
+        // // this.isLastSpaceDown = this.cursors.space.isDown;
 
         // if (this.cursors.down.isDown) {
         //     // Transition to gameplay
         //     this.scene.start('Lvl2Scene')
         // }
+        this.plat1.update(deltaTime);
+        this.plat2.update(deltaTime);
+        // // Un-comment this block for keyboard controls
+        if (this.cursors.left.isDown) {
+            this.player.setVelocityX(-90);
+            this.player.anims.play('left', true);
+        }
+        else if (this.cursors.right.isDown) {
+            this.player.setVelocityX(90);
+            this.player.anims.play('right', true);
+        }
+        else {
+            this.player.setVelocityX(0);
+            this.player.anims.play('turn');
+        }
+
+        if (this.cursors.up.isDown && this.player.body.touching.down) {
+            this.player.setVelocityY(-250);
+            // this.sound.play('jump', {start: 0, duration: 0.1});
+        }
+
+        // was space down (reference tank game)
+        if (this.cursors.space.isDown && !this.isLastSpaceDown)
+        {
+            if(this.plat2.isActive)
+            {
+                this.plat1.activate(); 
+                this.plat2.deactivate();
+            }
+            else
+            {
+                this.plat1.deactivate();
+                this.plat2.activate();
+            }
+            this.sound.play('flip', /*{start: 0, duration: 0.1}*/);
+        }
+        this.isLastSpaceDown = this.cursors.space.isDown;
+
+        if (this.cursors.down.isDown) {
+            // Transition to gameplay
+            this.scene.start('Lvl2Scene')
+        }
     }
 }
 

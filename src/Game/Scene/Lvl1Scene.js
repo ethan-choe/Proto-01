@@ -176,7 +176,7 @@ class lvl1Scene extends Phaser.Scene {
 
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             this.player.setVelocityY(-250);
-            this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.000001});
+            this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
         }
 
         // was space down (reference tank game)

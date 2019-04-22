@@ -10,8 +10,10 @@ let player;
 let cursors;
 
 const plat1Config = [
-  { x: 450, y: 227, asset: 'wall1' },
-  { x: 300, y: 227, asset: 'wall1' },
+  { x: 450, y: 250, asset: 'wall1' },
+  { x: 300, y: 250, asset: 'wall1' },
+  { x: 450, y: 190, asset: 'wall1' },
+  { x: 300, y: 190, asset: 'wall1' },
   { x: 50, y: 500, asset: 'short1' },
   { x: 235, y: 450, asset: 'short1' },
   { x: 50, y: 400, asset: 'short1' },
@@ -188,7 +190,7 @@ class lvl2Scene extends Phaser.Scene {
 
         if (this.cursors.down.isDown) {
             // Transition to gameplay
-            this.scene.start('Lvl2Scene')
+            this.scene.start('EndScene')
         }
     }
 }

@@ -21,6 +21,12 @@ class StartScene extends Phaser.Scene {
   }
 
   update() {
+    if (this.serialMsg === 'j') {
+      this.overlay.classList.add('hidden');
+      // Transition to gameplay
+      this.scene.start('Lvl1Scene')
+    }
+    
     if (this.cursors.space.isDown) {
       this.overlay.classList.add('hidden');
       // Transition to gameplay

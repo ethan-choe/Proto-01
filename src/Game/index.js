@@ -21,7 +21,7 @@ const config = {
           gravity: { y: 200 }
       }
   },
-  scene: [StartScene, Lvl1Scene, Lvl2Scene, Lvl3Scene, EndScene],
+  scene: [StartScene, Lvl1Scene, Lvl2Scene, EndScene],
 
 
 };
@@ -32,6 +32,8 @@ const game = new Phaser.Game(config);
 const gameManager = {
   init: () => {
     SerialPortReader.openPort(p => /Arduino/.test(p.manufacturer), '~');
+
+    game.canvas.classList.add('shake-enabled');
       // (command) => {
       //   // Parse Arduino commands
       //   if (command === 's') {

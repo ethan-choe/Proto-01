@@ -48,6 +48,37 @@ class lvl2Scene extends Phaser.Scene {
     onSerialMessage(msg) {
         this.serialMsg = msg;
     }
+
+    startScreenShake(intensity, duration, speed) {
+        this.isShaking = true;
+        this.shakeIntensity = intensity;
+        this.shakeTime = duration;
+        this.shakeSpeed = speed;
+
+        this.shakeXScale = Math.random() > 0.5 ? 1 : -1;
+        this.shakeYScale = Math.random() > 0.5 ? 1 : -1;
+    }
+
+    updateScreenShake(deltaTime)
+    {
+        if(this.isShaking)
+        {
+            this.shakeTime -= deltaTime;
+
+            const shakeAmount = this.shakeTime / this.shakeSpeed;
+            this.game.canvas.style.left = "" + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.top = "" + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
+        }
+
+        if (this.shakeTime < 0)
+        {
+            this.isShaking = false;
+            this.game.canvas.style.left = '0px';
+            this.game.canvas.style.top = '0px';
+        }
+
+    }
+
     preload () {
         this.load.image('groundT', '../assets/tground.png');
         this.load.image('groundB', '../assets/bground.png');
@@ -60,9 +91,15 @@ class lvl2Scene extends Phaser.Scene {
             '../assets/dude.png',
             { frameWidth: 32, frameHeight: 48 }
         );
+
+        //Sound
+        this.load.audio('flip', '../assets/teleport-high.wav');
+        this.load.audio('jump', '../assets/sand-jump.wav');
+        this.load.audio('soundtrack', '../assets/393520__frankum__ambient-guitar-x1-loop-mode.mp3');
     }
     create () {
 
+        this.sound.play('soundtrack', {volume: 0.5, loop: true});
         this.add.image(750,400,'door');
 
         this.cursors = {
@@ -106,10 +143,18 @@ class lvl2Scene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.isShaking = false;
+        this.shakeTime = 0;
+        this.shakeIntensity = 0;
+        this.shakeXScale = 0;
+        this.shakeYScale = 0;
+        this.shakeSpeed = 0;
+
     }
 
     update(_,deltaTime) {
 
+        this.updateScreenShake(deltaTime);
         this.plat1.update(deltaTime);
         this.plat2.update(deltaTime);
 
@@ -170,6 +215,7 @@ class lvl2Scene extends Phaser.Scene {
 
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             this.player.setVelocityY(-250);
+            this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
         }
 
         // was space down (reference tank game)
@@ -185,12 +231,14 @@ class lvl2Scene extends Phaser.Scene {
                 this.plat1.deactivate();
                 this.plat2.activate();
             }
+            this.startScreenShake(2,50,25);
+            this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
         }
         this.isLastSpaceDown = this.cursors.space.isDown;
 
         if (this.cursors.down.isDown) {
             // Transition to gameplay
-            this.scene.start('EndScene')
+            this.scene.start('EndScene');
         }
     }
 }

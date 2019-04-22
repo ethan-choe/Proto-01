@@ -3,11 +3,13 @@ int buttJpin = 7;
 int buttLpin = 4;
 int buttRpin = 8;
 
+int dbnce = 0;
 int tilt;
 int buttJ;
 int buttL;
 int buttR;
 
+int prevTime = 0;
 
 void setup()
 {
@@ -16,10 +18,20 @@ void setup()
   pinMode(buttJpin, INPUT);
   pinMode(buttLpin, INPUT);
   pinMode(buttRpin, INPUT);
+  prevTime = millis();
 }
  
 void loop()
 {
+  int currentTime = millis();
+  int dt = prevTime - currentTime;
+  prevTime = currentTime;
+
+  if(dbnce > 0)
+  {
+    dbnce -= dt;
+  }
+
   tilt = digitalRead(tiltpin);
   buttJ = digitalRead(buttJpin);
   buttL = digitalRead(buttLpin);
@@ -28,7 +40,11 @@ void loop()
   // Flip
 //   Serial.print(tilt);
   if(tilt == HIGH) {
-    Serial.print("b~");
+    if(dbnce <= 0)
+    {
+      Serial.print("b~");
+      dbnce = 200;
+    }
     if(buttL == HIGH)
     {
       Serial.print("l~");
@@ -40,7 +56,12 @@ void loop()
   }
   else
   {
-//    Serial.print("t~");
+    if(dbnce <= 0)
+    {
+      Serial.print("t~");
+      dbnce = 200;
+    }
+    
     if(buttL == HIGH)
     {
       Serial.print("r~");
@@ -69,5 +90,5 @@ void loop()
 //    Serial.print("s~");
   }
   
-  delay(200);
+  delay(10);
 }

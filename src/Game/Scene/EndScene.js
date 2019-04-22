@@ -1,7 +1,7 @@
 const Phaser = require('phaser');
-
 const SerialPortReader = require('../SerialPortReader.js')
-class StartScene extends Phaser.Scene {
+
+class EndScene extends Phaser.Scene {
   constructor() {
     super('EndScene');
     SerialPortReader.addListener(this.onSerialMessage.bind(this));
@@ -10,6 +10,7 @@ class StartScene extends Phaser.Scene {
   onSerialMessage(msg) {
     this.serialMsg = msg;
   }
+
   create() {
     this.overlay = document.querySelector('#end-scene');
     this.overlay.classList.remove('hidden');
@@ -34,4 +35,4 @@ class StartScene extends Phaser.Scene {
   }
 }
 
-module.exports = StartScene;
+module.exports = EndScene;

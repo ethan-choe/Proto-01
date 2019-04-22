@@ -30,6 +30,36 @@ class lvl1Scene extends Phaser.Scene {
         SerialPortReader.addListener(this.onSerialMessage.bind(this));
     }
 
+    startScreenShake(intensity, duration, speed) {
+        this.isShaking = true;
+        this.shakeIntensity = intensity;
+        this.shakeTime = duration;
+        this.shakeSpeed = speed;
+
+        this.shakeXScale = Math.random() > 0.5 ? 1 : -1;
+        this.shakeYScale = Math.random() > 0.5 ? 1 : -1;
+    }
+
+    updateScreenShake(deltaTime)
+    {
+        if(this.isShaking)
+        {
+            this.shakeTime -= deltaTime;
+
+            const shakeAmount = this.shakeTime / this.shakeSpeed;
+            this.game.canvas.style.left = "" + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.top = "" + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
+        }
+
+        if (this.shakeTime < 0)
+        {
+            this.isShaking = false;
+            this.game.canvas.style.left = '0px';
+            this.game.canvas.style.top = '0px';
+        }
+
+    }
+
     onSerialMessage(msg) {
         this.serialMsg = msg;
     }
@@ -48,7 +78,6 @@ class lvl1Scene extends Phaser.Scene {
         );
 
         //Sound
-
         this.load.audio('flip', '../assets/teleport-high.wav');
         this.load.audio('jump', '../assets/sand-jump.wav');
         this.load.audio('soundtrack', '../assets/393520__frankum__ambient-guitar-x1-loop-mode.mp3');
@@ -105,9 +134,18 @@ class lvl1Scene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.isShaking = false;
+        this.shakeTime = 0;
+        this.shakeIntensity = 0;
+        this.shakeXScale = 0;
+        this.shakeYScale = 0;
+        this.shakeSpeed = 0;
+
     }
 
     update(_,deltaTime) {
+
+        this.updateScreenShake(deltaTime);
         // Process this.serialMsg here
         // if (this.serialMsg === 'l') {
         //     this.player.setVelocityX(-90);
@@ -128,8 +166,10 @@ class lvl1Scene extends Phaser.Scene {
         // }
 
         // // was space down (reference tank game)
+        // // add debounce timer
         // if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
         // {
+
         //     if(this.plat2.isActive)
         //     {
         //         this.plat1.activate(); 
@@ -138,18 +178,20 @@ class lvl1Scene extends Phaser.Scene {
         //         //     game.scene.scenes[i].plat2.activate();
         //         //     game.scene.scenes[i].plat1.deactivate();
         //         // }
+                    // this.startScreenShake(3,100,50);
         //     }
         // }
         // else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
         // {
         //     if(this.plat1.isActive)
         //     {
-        //         this.plat2.activate(); 
-        //         this.plat1.deactivate();
-        //         // for(var i = 1; i < 4; i++) {
-        //         //     game.scene.scenes[i].plat2.activate();
-        //         //     game.scene.scenes[i].plat1.deactivate();
-        //         // }
+        //          this.plat2.activate(); 
+        //          this.plat1.deactivate();
+        //          // for(var i = 1; i < 4; i++) {
+        //          //     game.scene.scenes[i].plat2.activate();
+        //          //     game.scene.scenes[i].plat1.deactivate();
+        //          // }
+                    // this.startScreenShake(3,100,50);
         //     }
         // }
         // // this.isLastSpaceDown = this.cursors.space.isDown;
@@ -192,6 +234,7 @@ class lvl1Scene extends Phaser.Scene {
                 this.plat1.deactivate();
                 this.plat2.activate();
             }
+            this.startScreenShake(2,50,25);
             this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
         }
         this.isLastSpaceDown = this.cursors.space.isDown;

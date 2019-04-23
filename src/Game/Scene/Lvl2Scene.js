@@ -39,6 +39,15 @@ const plat2Config = [
 
 ]
 
+function isCircleCollision(c1, c2) {
+    // Get the distance between the two circles
+    const distSq = (c1.x - c2.x) * (c1.x - c2.x) + (c1.y - c2.y) * (c1.y - c2.y);
+    const radiiSq = (c1.collisionRadius * c1.collisionRadius) + (c2.collisionRadius * c2.collisionRadius);
+  
+    // Returns true if the distance btw the circle's center points is less than the sum of the radii
+    return (distSq < radiiSq);
+}
+
 class lvl2Scene extends Phaser.Scene {
     constructor() {
       super('Lvl2Scene');
@@ -100,7 +109,10 @@ class lvl2Scene extends Phaser.Scene {
     create () {
 
         this.sound.play('soundtrack', {volume: 0.5, loop: true});
-        this.add.image(750,400,'door');
+        
+        this.d = this.add.image(750,400,'door');
+        this.d.collisionRadius = 20;
+        
 
         this.cursors = {
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
@@ -115,6 +127,7 @@ class lvl2Scene extends Phaser.Scene {
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
         this.player.body.setGravityY(270);
+        this.player.collisionRadius = 20;
 
         //Platforms
         this.plat1 = new PlatformSet(this, plat1Config, player, 'groundT');
@@ -214,6 +227,10 @@ class lvl2Scene extends Phaser.Scene {
         }
 
         if (this.cursors.up.isDown && this.player.body.touching.down) {
+            if(isCircleCollision(this.d,this.player))
+            {
+                this.scene.start('EndScene');
+            }
             this.player.setVelocityY(-250);
             this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
         }
@@ -236,10 +253,10 @@ class lvl2Scene extends Phaser.Scene {
         }
         this.isLastSpaceDown = this.cursors.space.isDown;
 
-        if (this.cursors.down.isDown) {
-            // Transition to gameplay
-            this.scene.start('EndScene');
-        }
+        // if (this.cursors.down.isDown) {
+        //     // Transition to gameplay
+        //     this.scene.start('EndScene');
+        // }
     }
 }
 

@@ -16,7 +16,7 @@ class EndScene extends Phaser.Scene {
     this.overlay.classList.remove('hidden');
 
     this.cursors = {
-      space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
+      up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
     };
   }
 
@@ -27,7 +27,7 @@ class EndScene extends Phaser.Scene {
       this.scene.start('Lvl1Scene')
     }
 
-    if (this.cursors.space.isDown) {
+    if (this.cursors.up.isDown) {
       this.overlay.classList.add('hidden');
       // Transition to gameplay
       this.scene.start('Lvl1Scene')

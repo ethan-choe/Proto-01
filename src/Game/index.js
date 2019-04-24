@@ -7,8 +7,8 @@ const SerialPortReader = require('./SerialPortReader');
 // Import Scenes
 const StartScene = require('./Scene/StartScene');
 const Lvl1Scene = require('./Scene/Lvl1Scene');
-const Lvl2Scene = require('./Scene/Lvl2Scene');
-const Lvl3Scene = require('./Scene/Lvl3Scene');
+const Lvl2Scene = require('./Scene/Lvl3Scene');
+const Lvl3Scene = require('./Scene/Lvl2Scene');
 const EndScene = require('./Scene/EndScene');
 
 const config = {
@@ -21,7 +21,7 @@ const config = {
           gravity: { y: 200 }
       }
   },
-  scene: [StartScene, Lvl1Scene, Lvl2Scene, EndScene],
+  scene: [StartScene, Lvl1Scene, Lvl2Scene, Lvl3Scene, EndScene],
 
 
 };

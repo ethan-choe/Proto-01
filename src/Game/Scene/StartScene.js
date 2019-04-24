@@ -30,7 +30,7 @@ class StartScene extends Phaser.Scene {
     if (this.cursors.up.isDown) {
       this.overlay.classList.add('hidden');
       // Transition to gameplay
-      this.scene.start('Lvl1Scene')
+      this.scene.start('Lvl3Scene')
     }
 
     // Process this.serialMsg here

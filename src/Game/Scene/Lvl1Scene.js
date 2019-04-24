@@ -10,17 +10,14 @@ let player;
 let cursors;
 
 const plat1Config = [
-  { x: 50, y: 500, asset: 'short1' },
-  { x: 350, y: 400, asset: 'short1' },
-  { x: 650, y: 300, asset: 'short1' },
-  { x: 350, y: 200, asset: 'short1' },
-  { x: 650, y: 150, asset: 'short1' }
+  { x: 400, y: 150, asset: 'wall1' },
+  { x: 400, y: 380, asset: 'wall1' },
+  { x: 400, y: 380, asset: 'wall1' },
+  
 ]
 const plat2Config = [
-  { x: 200, y: 450, asset: 'short2' },
-  { x: 500, y: 350, asset: 'short2' },
-  { x: 500, y: 250, asset: 'short2' },
-  { x: 500, y: 150, asset: 'short2' }
+  { x: 650, y: 680, asset: 'wall2' },
+  
 ]
 
 function isCircleCollision(c1, c2) {
@@ -56,15 +53,15 @@ class lvl1Scene extends Phaser.Scene {
             this.shakeTime -= deltaTime;
 
             const shakeAmount = this.shakeTime / this.shakeSpeed;
-            this.game.canvas.style.left = "" + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
-            this.game.canvas.style.top = "" + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.left = window.innerWidth / 2 - 400 + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.top = window.innerHeight / 2 - 300 + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
         }
 
         if (this.shakeTime < 0)
         {
             this.isShaking = false;
-            this.game.canvas.style.left = '0px';
-            this.game.canvas.style.top = '0px';
+            this.game.canvas.style.left = 'calc(50vw - 400px)';
+            this.game.canvas.style.top = 'calc(50vh - 300px)';
         }
 
     }
@@ -78,8 +75,8 @@ class lvl1Scene extends Phaser.Scene {
         this.load.image('groundB', '../assets/bground.png');
         this.load.image('short1', '../assets/tground1.png');
         this.load.image('short2', '../assets/nplatt.png');
-        this.load.image('wall1', '../assets/plat1-wall.png');
-        this.load.image('wall2', '../assets/plat2-wall.png');
+        this.load.image('wall1', '../assets/wallt.png');
+        this.load.image('wall2', '../assets/wallb.png');
         this.load.image('door', '../assets/door.png');
         this.load.spritesheet('dude', 
             '../assets/dude.png',
@@ -98,7 +95,7 @@ class lvl1Scene extends Phaser.Scene {
         // music.play();
         this.sound.play('soundtrack', {volume: 0.5, loop: true});
 
-        this.d = this.add.image(650,100,'door');
+        this.d = this.add.image(650,535,'door');
         this.d.collisionRadius = 20;
         
         // console.log(this.d);
@@ -251,7 +248,7 @@ class lvl1Scene extends Phaser.Scene {
                 this.plat1.deactivate();
                 this.plat2.activate();
             }
-            this.startScreenShake(2,50,25);
+            this.startScreenShake(7, 100, 10);
             this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
         }
         this.isLastSpaceDown = this.cursors.space.isDown;

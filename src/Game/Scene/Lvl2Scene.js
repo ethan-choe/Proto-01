@@ -10,33 +10,17 @@ let player;
 let cursors;
 
 const plat1Config = [
-  { x: 450, y: 250, asset: 'wall1' },
-  { x: 300, y: 250, asset: 'wall1' },
-  { x: 450, y: 190, asset: 'wall1' },
-  { x: 300, y: 190, asset: 'wall1' },
-  { x: 50, y: 500, asset: 'short1' },
-  { x: 235, y: 450, asset: 'short1' },
-  { x: 50, y: 400, asset: 'short1' },
-  { x: 235, y: 350, asset: 'short1' },
-  { x: 50, y: 300, asset: 'short1' },
-  { x: 235, y: 250, asset: 'short1' },
-  { x: 50, y: 200, asset: 'short1' },
-  { x: 235, y: 150, asset: 'short1' },
-  { x: 375, y: 200, asset: 'short1' },
-  { x: 375, y: 300, asset: 'short1' },
-  { x: 375, y: 450, asset: 'short1' },
-  { x: 525, y: 450, asset: 'short1' }
-
+  { x: 50, y: 510, asset: 'short1' },
+  { x: 350, y: 410, asset: 'short1' },
+  { x: 650, y: 300, asset: 'short1' },
+  { x: 350, y: 190, asset: 'short1' },
+  { x: 650, y: 150, asset: 'short1' }
 ]
 const plat2Config = [
-  { x: 450, y: 150, asset: 'wall2' },
-  { x: 300, y: 350, asset: 'wall2' },
-  { x: 375, y: 250, asset: 'short2' },
-  { x: 375, y: 150, asset: 'short2' },
-
-  { x: 700, y: 450, asset: 'short2' },
-  { x: 750, y: 450, asset: 'short2' }
-
+  { x: 200, y: 450, asset: 'short2' },
+  { x: 500, y: 350, asset: 'short2' },
+  { x: 500, y: 240, asset: 'short2' },
+  { x: 500, y: 130, asset: 'short2' }
 ]
 
 function isCircleCollision(c1, c2) {
@@ -51,11 +35,8 @@ function isCircleCollision(c1, c2) {
 class lvl2Scene extends Phaser.Scene {
     constructor() {
       super('Lvl2Scene');
-      SerialPortReader.addListener(this.onSerialMessage.bind(this));
-    }
-
-    onSerialMessage(msg) {
-        this.serialMsg = msg;
+    //   console.log('setup')
+        SerialPortReader.addListener(this.onSerialMessage.bind(this));
     }
 
     startScreenShake(intensity, duration, speed) {
@@ -75,17 +56,21 @@ class lvl2Scene extends Phaser.Scene {
             this.shakeTime -= deltaTime;
 
             const shakeAmount = this.shakeTime / this.shakeSpeed;
-            this.game.canvas.style.left = "" + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
-            this.game.canvas.style.top = "" + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.left = window.innerWidth / 2 - 400 + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.top = window.innerHeight / 2 - 300 + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
         }
 
         if (this.shakeTime < 0)
         {
             this.isShaking = false;
-            this.game.canvas.style.left = '0px';
-            this.game.canvas.style.top = '0px';
+            this.game.canvas.style.left = 'calc(50vw - 400px)';
+            this.game.canvas.style.top = 'calc(50vh - 300px)';
         }
 
+    }
+
+    onSerialMessage(msg) {
+        this.serialMsg = msg;
     }
 
     preload () {
@@ -93,8 +78,8 @@ class lvl2Scene extends Phaser.Scene {
         this.load.image('groundB', '../assets/bground.png');
         this.load.image('short1', '../assets/tground1.png');
         this.load.image('short2', '../assets/nplatt.png');
-        this.load.image('wall1', '../assets/wallt.png');
-        this.load.image('wall2', '../assets/wallb.png');
+        this.load.image('wall1', '../assets/plat1-wall.png');
+        this.load.image('wall2', '../assets/plat2-wall.png');
         this.load.image('door', '../assets/door.png');
         this.load.spritesheet('dude', 
             '../assets/dude.png',
@@ -108,11 +93,15 @@ class lvl2Scene extends Phaser.Scene {
     }
     create () {
 
+        // Play Background Sound
+        // var music = this.sound.add('soundtrack');
+        // music.play();
         this.sound.play('soundtrack', {volume: 0.5, loop: true});
-        
-        this.d = this.add.image(750,400,'door');
+
+        this.d = this.add.image(650,110,'door');
         this.d.collisionRadius = 20;
         
+        // console.log(this.d);
 
         this.cursors = {
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
@@ -121,6 +110,8 @@ class lvl2Scene extends Phaser.Scene {
             down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
         };
+
+        this.graphics = this.add.graphics('')
         
         // Player
         this.player = this.physics.add.sprite(100, -450, 'dude');
@@ -166,11 +157,8 @@ class lvl2Scene extends Phaser.Scene {
     }
 
     update(_,deltaTime) {
-
+        // console.log(this.player);
         this.updateScreenShake(deltaTime);
-        this.plat1.update(deltaTime);
-        this.plat2.update(deltaTime);
-
         // Process this.serialMsg here
         // if (this.serialMsg === 'l') {
         //     this.player.setVelocityX(-90);
@@ -187,32 +175,47 @@ class lvl2Scene extends Phaser.Scene {
 
         // if (this.serialMsg === 'j') {
         //     this.player.setVelocityY(-250);
+        //     // this.sound.play('jump', {start: 0, duration: 0.1});
         // }
 
         // // was space down (reference tank game)
-        // if (this.serialMsg === 't')
+        // // add debounce timer
+        // if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
         // {
+
         //     if(this.plat2.isActive)
         //     {
         //         this.plat1.activate(); 
         //         this.plat2.deactivate();
+        //         // for(var i = 1; i < 4; i++) {
+        //         //     game.scene.scenes[i].plat2.activate();
+        //         //     game.scene.scenes[i].plat1.deactivate();
+        //         // }
+                    // this.startScreenShake(3,100,50);
         //     }
         // }
-        // else if (this.serialMsg === 'b')
+        // else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
         // {
         //     if(this.plat1.isActive)
         //     {
-        //         this.plat2.activate(); 
-        //         this.plat1.deactivate();
+        //          this.plat2.activate(); 
+        //          this.plat1.deactivate();
+        //          // for(var i = 1; i < 4; i++) {
+        //          //     game.scene.scenes[i].plat2.activate();
+        //          //     game.scene.scenes[i].plat1.deactivate();
+        //          // }
+                    // this.startScreenShake(3,100,50);
         //     }
         // }
+        // // this.isLastSpaceDown = this.cursors.space.isDown;
 
         // if (this.cursors.down.isDown) {
         //     // Transition to gameplay
-        //     this.scene.start('EndScene')
-        //   }
-
-        // Un-comment this block for keyboard controls
+        //     this.scene.start('Lvl2Scene')
+        // }
+        this.plat1.update(deltaTime);
+        this.plat2.update(deltaTime);
+        // // Un-comment this block for keyboard controls
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
@@ -229,7 +232,7 @@ class lvl2Scene extends Phaser.Scene {
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             if(isCircleCollision(this.d,this.player))
             {
-                this.scene.start('EndScene');
+                this.scene.start('Lvl3Scene');
             }
             this.player.setVelocityY(-250);
             this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
@@ -248,15 +251,11 @@ class lvl2Scene extends Phaser.Scene {
                 this.plat1.deactivate();
                 this.plat2.activate();
             }
-            this.startScreenShake(2,50,25);
+            this.startScreenShake(7, 100, 10);
             this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
         }
         this.isLastSpaceDown = this.cursors.space.isDown;
 
-        // if (this.cursors.down.isDown) {
-        //     // Transition to gameplay
-        //     this.scene.start('EndScene');
-        // }
     }
 }
 

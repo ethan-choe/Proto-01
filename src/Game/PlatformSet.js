@@ -9,12 +9,12 @@ class PlatformSet {
 
         const platforms = this.group.children.entries;
 
-        this.group.create(400, 568, ground);
         for (let i = 0; i < lvlConfig.length; i++) {
             const element = lvlConfig[i];
             this.group.create(element.x, element.y, element.asset);
             
         }
+        this.group.create(400, 580, ground);
 
         this.collider = this.scene.physics.add.collider(scene.player, this.group);
         this.collider.active = false;

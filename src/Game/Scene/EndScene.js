@@ -21,6 +21,7 @@ class EndScene extends Phaser.Scene {
   }
 
   update() {
+    this.sound.stopAll();
     if (this.serialMsg === 'j') {
       this.overlay.classList.add('hidden');
       // Transition to gameplay
@@ -30,7 +31,7 @@ class EndScene extends Phaser.Scene {
     if (this.cursors.up.isDown) {
       this.overlay.classList.add('hidden');
       // Transition to gameplay
-      this.scene.start('Lvl1Scene')
+      this.scene.start('StartScene')
     }
   }
 }

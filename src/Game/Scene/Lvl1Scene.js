@@ -227,6 +227,7 @@ class lvl1Scene extends Phaser.Scene {
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             if(isCircleCollision(this.d,this.player))
             {
+                this.sound.stopAll();
                 this.scene.start('Lvl2Scene');
             }
             this.player.setVelocityY(-250);

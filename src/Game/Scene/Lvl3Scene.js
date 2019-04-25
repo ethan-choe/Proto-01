@@ -14,14 +14,14 @@ const plat1Config = [
   { x: 300, y: 250, asset: 'wall1' },
   { x: 450, y: 190, asset: 'wall1' },
   { x: 300, y: 190, asset: 'wall1' },
-  { x: 50, y: 500, asset: 'short1' },
-  { x: 235, y: 450, asset: 'short1' },
+  { x: 50, y: 510, asset: 'short1' },
   { x: 50, y: 400, asset: 'short1' },
-  { x: 235, y: 350, asset: 'short1' },
-  { x: 50, y: 300, asset: 'short1' },
-  { x: 235, y: 250, asset: 'short1' },
-  { x: 50, y: 200, asset: 'short1' },
-  { x: 235, y: 150, asset: 'short1' },
+  { x: 50, y: 290, asset: 'short1' },
+  { x: 50, y: 180, asset: 'short1' },
+  { x: 235, y: 450, asset: 'short1' },
+  { x: 235, y: 340, asset: 'short1' },
+  { x: 235, y: 230, asset: 'short1' },
+  { x: 235, y: 120, asset: 'short1' },
   { x: 375, y: 200, asset: 'short1' },
   { x: 375, y: 300, asset: 'short1' },
   { x: 375, y: 450, asset: 'short1' },
@@ -30,7 +30,7 @@ const plat1Config = [
 ]
 const plat2Config = [
   { x: 450, y: 150, asset: 'wall2' },
-  { x: 300, y: 335, asset: 'wall2' },
+  { x: 300, y: 300, asset: 'wall2' },
   { x: 300, y: 400, asset: 'wall2' },
   { x: 375, y: 250, asset: 'short2' },
   { x: 375, y: 150, asset: 'short2' },
@@ -208,11 +208,6 @@ class lvl3Scene extends Phaser.Scene {
         //     }
         // }
 
-        // if (this.cursors.down.isDown) {
-        //     // Transition to gameplay
-        //     this.scene.start('EndScene')
-        //   }
-
         // Un-comment this block for keyboard controls
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-90);
@@ -230,7 +225,7 @@ class lvl3Scene extends Phaser.Scene {
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             if(isCircleCollision(this.d,this.player))
             {
-                this.scene.start('EndScene');
+                this.scene.start('Lvl4Scene');
             }
             this.player.setVelocityY(-250);
             this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
@@ -254,6 +249,7 @@ class lvl3Scene extends Phaser.Scene {
         }
         this.isLastSpaceDown = this.cursors.space.isDown;
 
+        // Dev switch between Levels
         // if (this.cursors.down.isDown) {
         //     // Transition to gameplay
         //     this.scene.start('EndScene');

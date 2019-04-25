@@ -10,14 +10,32 @@ let player;
 let cursors;
 
 const plat1Config = [
-  { x: 400, y: 150, asset: 'wall1' },
-  { x: 400, y: 380, asset: 'wall1' },
-  { x: 400, y: 380, asset: 'wall1' },
-  
+  { x: 150, y: 50, asset: 'Twall1' },
+  { x: 250, y: 50, asset: 'Twall1' },
+  { x: 350, y: 250, asset: 'Twall1' },
+  { x: 450, y: 350, asset: 'Twall1' },
+  { x: 700, y: 250, asset: 'Twall1' },
+  { x: 200, y: 135, asset: 'tiny1' },
+  { x: 50, y: 510, asset: 'tiny1' },
+  { x: 350, y: 470, asset: 'tiny1' },
+  { x: 650, y: 470, asset: 'tiny1' },
+  { x: 750, y: 410, asset: 'tiny1' },
+  { x: 750, y: 290, asset: 'tiny1' },
+  { x: 750, y: 170, asset: 'tiny1' },
+
 ]
 const plat2Config = [
-  { x: 650, y: 680, asset: 'wall2' },
-  
+  { x: 300, y: 200 , asset: 'Twall2' },
+  { x: 400, y: 300 , asset: 'Twall2' },
+  { x: 500, y: 400, asset: 'Twall2' }, 
+  { x: 650, y: 270, asset: 'Twall2' },
+  { x: 700, y: 400, asset: 'Twall2' },
+  { x: 200, y: 470, asset: 'tiny2' },
+  { x: 500, y: 470, asset: 'tiny2' },
+  { x: 750, y: 350, asset: 'tiny2' },
+  { x: 750, y: 230, asset: 'tiny2' },
+  { x: 750, y: 230, asset: 'tiny2' },
+
 ]
 
 function isCircleCollision(c1, c2) {
@@ -29,11 +47,14 @@ function isCircleCollision(c1, c2) {
     return (distSq < radiiSq);
 }
 
-class lvl1Scene extends Phaser.Scene {
+class lvl4Scene extends Phaser.Scene {
     constructor() {
-      super('Lvl1Scene');
-    //   console.log('setup')
-        SerialPortReader.addListener(this.onSerialMessage.bind(this));
+      super('Lvl4Scene');
+      SerialPortReader.addListener(this.onSerialMessage.bind(this));
+    }
+
+    onSerialMessage(msg) {
+        this.serialMsg = msg;
     }
 
     startScreenShake(intensity, duration, speed) {
@@ -53,8 +74,8 @@ class lvl1Scene extends Phaser.Scene {
             this.shakeTime -= deltaTime;
 
             const shakeAmount = this.shakeTime / this.shakeSpeed;
-            this.game.canvas.style.left = window.innerWidth / 2 - 400 + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
-            this.game.canvas.style.top = window.innerHeight / 2 - 300 + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.left = window.innerWeight / 2 - 400 + + (Math.cos(shakeAmount) * this.shakeXScale * this.shakeIntensity) + "px";
+            this.game.canvas.style.top = window.innerHeight / 2 - 300 + + (Math.sin(shakeAmount) * this.shakeYScale * this.shakeIntensity) + "px";
         }
 
         if (this.shakeTime < 0)
@@ -66,15 +87,13 @@ class lvl1Scene extends Phaser.Scene {
 
     }
 
-    onSerialMessage(msg) {
-        this.serialMsg = msg;
-    }
-
     preload () {
         this.load.image('groundT', '../assets/tground.png');
         this.load.image('groundB', '../assets/bground.png');
-        this.load.image('wall1', '../assets/wallt.png');
-        this.load.image('wall2', '../assets/wallb.png');
+        this.load.image('tiny1', '../assets/tinyb.png');
+        this.load.image('tiny2', '../assets/tinyt.png');
+        this.load.image('Twall2', '../assets/Twallb.png');
+        this.load.image('Twall1', '../assets/Twallt.png');
         this.load.image('door', '../assets/door.png');
         this.load.spritesheet('dude', 
             '../assets/dude.png',
@@ -88,15 +107,11 @@ class lvl1Scene extends Phaser.Scene {
     }
     create () {
 
-        // Play Background Sound
-        // var music = this.sound.add('soundtrack');
-        // music.play();
         this.sound.play('soundtrack', {volume: 0.5, loop: true});
-
-        this.d = this.add.image(650,535,'door');
+        
+        this.d = this.add.image(200,100,'door');
         this.d.collisionRadius = 20;
         
-        // console.log(this.d);
 
         this.cursors = {
             left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
@@ -105,8 +120,6 @@ class lvl1Scene extends Phaser.Scene {
             down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
         };
-
-        this.graphics = this.add.graphics('')
         
         // Player
         this.player = this.physics.add.sprite(100, -450, 'dude');
@@ -152,8 +165,11 @@ class lvl1Scene extends Phaser.Scene {
     }
 
     update(_,deltaTime) {
-        // console.log(this.player);
+
         this.updateScreenShake(deltaTime);
+        this.plat1.update(deltaTime);
+        this.plat2.update(deltaTime);
+
         // Process this.serialMsg here
         // if (this.serialMsg === 'l') {
         //     this.player.setVelocityX(-90);
@@ -170,47 +186,27 @@ class lvl1Scene extends Phaser.Scene {
 
         // if (this.serialMsg === 'j') {
         //     this.player.setVelocityY(-250);
-        //     // this.sound.play('jump', {start: 0, duration: 0.1});
         // }
 
         // // was space down (reference tank game)
-        // // add debounce timer
-        // if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
+        // if (this.serialMsg === 't')
         // {
-
         //     if(this.plat2.isActive)
         //     {
         //         this.plat1.activate(); 
         //         this.plat2.deactivate();
-        //         // for(var i = 1; i < 4; i++) {
-        //         //     game.scene.scenes[i].plat2.activate();
-        //         //     game.scene.scenes[i].plat1.deactivate();
-        //         // }
-                    // this.startScreenShake(3,100,50);
         //     }
         // }
-        // else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
+        // else if (this.serialMsg === 'b')
         // {
         //     if(this.plat1.isActive)
         //     {
-        //          this.plat2.activate(); 
-        //          this.plat1.deactivate();
-        //          // for(var i = 1; i < 4; i++) {
-        //          //     game.scene.scenes[i].plat2.activate();
-        //          //     game.scene.scenes[i].plat1.deactivate();
-        //          // }
-                    // this.startScreenShake(3,100,50);
+        //         this.plat2.activate(); 
+        //         this.plat1.deactivate();
         //     }
         // }
-        // // this.isLastSpaceDown = this.cursors.space.isDown;
 
-        // if (this.cursors.down.isDown) {
-        //     // Transition to gameplay
-        //     this.scene.start('Lvl2Scene')
-        // }
-        this.plat1.update(deltaTime);
-        this.plat2.update(deltaTime);
-        // // Un-comment this block for keyboard controls
+        // Un-comment this block for keyboard controls
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
@@ -227,10 +223,10 @@ class lvl1Scene extends Phaser.Scene {
         if (this.cursors.up.isDown && this.player.body.touching.down) {
             if(isCircleCollision(this.d,this.player))
             {
-                this.scene.start('Lvl2Scene');
+                this.scene.start('EndScene');
             }
             this.player.setVelocityY(-250);
-            this.sound.play('jump', {volume: 0.1, start: 1, duration: 0.01});
+            this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
         }
 
         // was space down (reference tank game)
@@ -254,9 +250,9 @@ class lvl1Scene extends Phaser.Scene {
         // Dev switch between Levels
         // if (this.cursors.down.isDown) {
         //     // Transition to gameplay
-        //     this.scene.start('Lvl2Scene')
+        //     this.scene.start('EndScene');
         // }
     }
 }
 
-module.exports = lvl1Scene;
+module.exports = lvl4Scene;

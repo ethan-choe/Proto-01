@@ -256,6 +256,11 @@ class lvl2Scene extends Phaser.Scene {
         }
         this.isLastSpaceDown = this.cursors.space.isDown;
 
+        // Dev switch between Levels
+        // if (this.cursors.down.isDown) {
+        //     // Transition to gameplay
+        //     this.scene.start('Lvl2Scene')
+        // }
     }
 }
 

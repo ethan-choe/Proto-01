@@ -160,102 +160,101 @@ class lvl2Scene extends Phaser.Scene {
         // console.log(this.player);
         this.updateScreenShake(deltaTime);
         // Process this.serialMsg here
-        // if (this.serialMsg === 'l') {
-        //     this.player.setVelocityX(-90);
-        //     this.player.anims.play('left', true);
-        // }
-        // else if (this.serialMsg === 'r') {
-        //     this.player.setVelocityX(90);
-        //     this.player.anims.play('right', true);
-        // }
-        // else if (this.serialMsg === 's'){
-        //     this.player.setVelocityX(0);
-        //     this.player.anims.play('turn');
-        // }
-
-        // if (this.serialMsg === 'j') {
-        //     this.player.setVelocityY(-250);
-        //     // this.sound.play('jump', {start: 0, duration: 0.1});
-        // }
-
-        // // was space down (reference tank game)
-        // // add debounce timer
-        // if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
-        // {
-
-        //     if(this.plat2.isActive)
-        //     {
-        //         this.plat1.activate(); 
-        //         this.plat2.deactivate();
-        //         // for(var i = 1; i < 4; i++) {
-        //         //     game.scene.scenes[i].plat2.activate();
-        //         //     game.scene.scenes[i].plat1.deactivate();
-        //         // }
-                    // this.startScreenShake(3,100,50);
-        //     }
-        // }
-        // else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
-        // {
-        //     if(this.plat1.isActive)
-        //     {
-        //          this.plat2.activate(); 
-        //          this.plat1.deactivate();
-        //          // for(var i = 1; i < 4; i++) {
-        //          //     game.scene.scenes[i].plat2.activate();
-        //          //     game.scene.scenes[i].plat1.deactivate();
-        //          // }
-                    // this.startScreenShake(3,100,50);
-        //     }
-        // }
-        // // this.isLastSpaceDown = this.cursors.space.isDown;
-
-        // if (this.cursors.down.isDown) {
-        //     // Transition to gameplay
-        //     this.scene.start('Lvl2Scene')
-        // }
-        this.plat1.update(deltaTime);
-        this.plat2.update(deltaTime);
-        // // Un-comment this block for keyboard controls
-        if (this.cursors.left.isDown) {
+        if (this.serialMsg === 'l') {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
         }
-        else if (this.cursors.right.isDown) {
+        else if (this.serialMsg === 'r') {
             this.player.setVelocityX(90);
             this.player.anims.play('right', true);
         }
-        else {
+        else if (this.serialMsg === 's'){
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
-        if (this.cursors.up.isDown && this.player.body.touching.down) {
+        if (this.serialMsg === 'j') {
             if(isCircleCollision(this.d,this.player))
             {
                 this.sound.stopAll();
                 this.scene.start('Lvl3Scene');
             }
             this.player.setVelocityY(-250);
-            this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
+            this.sound.play('jump', {volume: 0.1, start: 1, duration: 0.01});
         }
 
         // was space down (reference tank game)
-        if (this.cursors.space.isDown && !this.isLastSpaceDown)
+        // add debounce timer
+        if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
         {
+
             if(this.plat2.isActive)
             {
                 this.plat1.activate(); 
                 this.plat2.deactivate();
+    
+                this.startScreenShake(7, 100, 10);
+                this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
             }
-            else
-            {
-                this.plat1.deactivate();
-                this.plat2.activate();
-            }
-            this.startScreenShake(7, 100, 10);
-            this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
         }
-        this.isLastSpaceDown = this.cursors.space.isDown;
+        else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
+        {
+            if(this.plat1.isActive)
+            {
+                this.plat2.activate(); 
+                this.plat1.deactivate();
+                 
+                this.startScreenShake(7, 100, 10);
+                this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
+            }
+        }
+        // if(this.serialMsg === 'b' || this.serialMsg === 't')
+        // {
+        //     this.isLastSpaceDown = true;
+        // }
+        this.plat1.update(deltaTime);
+        this.plat2.update(deltaTime);
+        // // Un-comment this block for keyboard controls
+        // if (this.cursors.left.isDown) {
+        //     this.player.setVelocityX(-90);
+        //     this.player.anims.play('left', true);
+        // }
+        // else if (this.cursors.right.isDown) {
+        //     this.player.setVelocityX(90);
+        //     this.player.anims.play('right', true);
+        // }
+        // else {
+        //     this.player.setVelocityX(0);
+        //     this.player.anims.play('turn');
+        // }
+
+        // if (this.cursors.up.isDown && this.player.body.touching.down) {
+        //     if(isCircleCollision(this.d,this.player))
+        //     {
+        //         this.sound.stopAll();
+        //         this.scene.start('Lvl3Scene');
+        //     }
+        //     this.player.setVelocityY(-250);
+        //     this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
+        // }
+
+        // // was space down (reference tank game)
+        // if (this.cursors.space.isDown && !this.isLastSpaceDown)
+        // {
+        //     if(this.plat2.isActive)
+        //     {
+        //         this.plat1.activate(); 
+        //         this.plat2.deactivate();
+        //     }
+        //     else
+        //     {
+        //         this.plat1.deactivate();
+        //         this.plat2.activate();
+        //     }
+        //     this.startScreenShake(7, 100, 10);
+        //     this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
+        // }
+        // this.isLastSpaceDown = this.cursors.space.isDown;
 
         // Dev switch between Levels
         // if (this.cursors.down.isDown) {

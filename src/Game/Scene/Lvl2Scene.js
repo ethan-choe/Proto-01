@@ -11,15 +11,17 @@ let cursors;
 
 const plat1Config = [
   { x: 50, y: 510, asset: 'short1' },
+  { x: 200, y: 450, asset: 'short1' },
   { x: 350, y: 410, asset: 'short1' },
   { x: 650, y: 300, asset: 'short1' },
   { x: 350, y: 190, asset: 'short1' },
-  { x: 650, y: 150, asset: 'short1' }
+  { x: 500, y: 130, asset: 'short1' },
+  { x: 640, y: 150, asset: 'short1' }
 ]
 const plat2Config = [
-  { x: 200, y: 450, asset: 'short2' },
-  { x: 500, y: 350, asset: 'short2' },
-  { x: 500, y: 240, asset: 'short2' },
+  { x: 350, y: 410, asset: 'short2' },
+  { x: 500, y: 340, asset: 'short2' },
+  { x: 400, y: 220, asset: 'short2' },
   { x: 500, y: 130, asset: 'short2' }
 ]
 
@@ -163,29 +165,33 @@ class lvl2Scene extends Phaser.Scene {
         if (this.serialMsg === 'l') {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
+            this.isLastSpaceDown = 'l';
         }
         else if (this.serialMsg === 'r') {
             this.player.setVelocityX(90);
             this.player.anims.play('right', true);
+            this.isLastSpaceDown = 'r';
         }
-        else if (this.serialMsg === 's'){
+        else if (this.serialMsg === 's')
+        {
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
-        if (this.serialMsg === 'j') {
+        if (this.serialMsg === 'j' && this.player.body.touching.down) {
             if(isCircleCollision(this.d,this.player))
             {
                 this.sound.stopAll();
                 this.scene.start('Lvl3Scene');
             }
-            this.player.setVelocityY(-250);
+            this.player.setVelocityY(-350);
             this.sound.play('jump', {volume: 0.1, start: 1, duration: 0.01});
+            this.isLastSpaceDown = 'j';
         }
 
         // was space down (reference tank game)
         // add debounce timer
-        if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
+        if (this.serialMsg === 't' /*&& this.isLastSpaceDown != 't'*/)
         {
 
             if(this.plat2.isActive)
@@ -197,7 +203,7 @@ class lvl2Scene extends Phaser.Scene {
                 this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
             }
         }
-        else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
+        else if (this.serialMsg === 'b' /*&& this.isLastSpaceDown != 'b'*/)
         {
             if(this.plat1.isActive)
             {
@@ -208,10 +214,7 @@ class lvl2Scene extends Phaser.Scene {
                 this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
             }
         }
-        // if(this.serialMsg === 'b' || this.serialMsg === 't')
-        // {
-        //     this.isLastSpaceDown = true;
-        // }
+
         this.plat1.update(deltaTime);
         this.plat2.update(deltaTime);
         // // Un-comment this block for keyboard controls

@@ -32,8 +32,14 @@ const plat2Config = [
   { x: 450, y: 150, asset: 'wall2' },
   { x: 300, y: 300, asset: 'wall2' },
   { x: 300, y: 400, asset: 'wall2' },
-  { x: 375, y: 250, asset: 'short2' },
+
+  { x: 235, y: 120, asset: 'short2' },
+
   { x: 375, y: 150, asset: 'short2' },
+  { x: 375, y: 250, asset: 'short2' },
+  { x: 375, y: 450, asset: 'short2' },
+
+  { x: 450, y: 450, asset: 'short2' },
 
   { x: 700, y: 450, asset: 'short2' },
   { x: 750, y: 450, asset: 'short2' }
@@ -176,17 +182,20 @@ class lvl3Scene extends Phaser.Scene {
         if (this.serialMsg === 'l') {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
+            this.isLastSpaceDown = 'l';
         }
         else if (this.serialMsg === 'r') {
             this.player.setVelocityX(90);
             this.player.anims.play('right', true);
+            this.isLastSpaceDown = 'r';
         }
-        else if (this.serialMsg === 's'){
+        else if (this.serialMsg === 's')
+        {
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
-        if (this.serialMsg === 'j') {
+        if (this.serialMsg === 'j' && this.player.body.touching.down) {
             if(isCircleCollision(this.d,this.player))
             {
                 this.sound.stopAll();
@@ -194,11 +203,12 @@ class lvl3Scene extends Phaser.Scene {
             }
             this.player.setVelocityY(-250);
             this.sound.play('jump', {volume: 0.1, start: 1, duration: 0.01});
+            this.isLastSpaceDown = 'j';
         }
 
         // was space down (reference tank game)
         // add debounce timer
-        if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
+        if (this.serialMsg === 't' && this.isLastSpaceDown != 't')
         {
 
             if(this.plat2.isActive)
@@ -210,7 +220,7 @@ class lvl3Scene extends Phaser.Scene {
                 this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
             }
         }
-        else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
+        else if (this.serialMsg === 'b' && this.isLastSpaceDown != 'b')
         {
             if(this.plat1.isActive)
             {
@@ -221,10 +231,6 @@ class lvl3Scene extends Phaser.Scene {
                 this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
             }
         }
-        // if(this.serialMsg === 'b' || this.serialMsg === 't')
-        // {
-        //     this.isLastSpaceDown = true;
-        // }
 
         // Un-comment this block for keyboard controls
         // if (this.cursors.left.isDown) {

@@ -15,13 +15,25 @@ const plat1Config = [
   { x: 350, y: 250, asset: 'Twall1' },
   { x: 450, y: 350, asset: 'Twall1' },
   { x: 700, y: 250, asset: 'Twall1' },
+  //Door Platform
   { x: 200, y: 135, asset: 'tiny1' },
+
   { x: 50, y: 510, asset: 'tiny1' },
+
+  { x: 200, y: 470, asset: 'tiny1' },
   { x: 350, y: 470, asset: 'tiny1' },
   { x: 650, y: 470, asset: 'tiny1' },
+  { x: 500, y: 470, asset: 'tiny1' },
+
+  //Ladder
   { x: 750, y: 410, asset: 'tiny1' },
   { x: 750, y: 290, asset: 'tiny1' },
   { x: 750, y: 170, asset: 'tiny1' },
+
+  //2nd Lvl
+  { x: 500, y: 300, asset: 'tiny1' },
+  { x: 300, y: 100 , asset: 'tiny1' },
+  { x: 400, y: 200 , asset: 'tiny1' }
 
 ]
 const plat2Config = [
@@ -30,11 +42,35 @@ const plat2Config = [
   { x: 500, y: 400, asset: 'Twall2' }, 
   { x: 650, y: 270, asset: 'Twall2' },
   { x: 700, y: 400, asset: 'Twall2' },
+
   { x: 200, y: 470, asset: 'tiny2' },
+  { x: 350, y: 470, asset: 'tiny2' },
+  { x: 400, y: 490, asset: 'tiny2' },
   { x: 500, y: 470, asset: 'tiny2' },
-  { x: 750, y: 350, asset: 'tiny2' },
-  { x: 750, y: 230, asset: 'tiny2' },
-  { x: 750, y: 230, asset: 'tiny2' },
+
+
+  //Ladder
+  { x: 750, y: 410, asset: 'tiny2' },
+  { x: 750, y: 410, asset: 'tiny2' },
+
+  { x: 700, y: 350, asset: 'tiny2' },
+  { x: 770, y: 290, asset: 'tiny2' },
+
+  { x: 700, y: 230, asset: 'tiny2' },
+  { x: 770, y: 170, asset: 'tiny2' },
+
+  //2nd Lvl
+  { x: 350, y: 160, asset: 'tiny2' },
+  { x: 450, y: 260, asset: 'tiny2' },
+
+
+
+
+ 
+
+  //Door Platform
+  { x: 200, y: 135, asset: 'tiny2' },
+  
 
 ]
 
@@ -174,17 +210,20 @@ class lvl4Scene extends Phaser.Scene {
         if (this.serialMsg === 'l') {
             this.player.setVelocityX(-90);
             this.player.anims.play('left', true);
+            this.isLastSpaceDown = 'l';
         }
         else if (this.serialMsg === 'r') {
             this.player.setVelocityX(90);
             this.player.anims.play('right', true);
+            this.isLastSpaceDown = 'r';
         }
-        else if (this.serialMsg === 's'){
+        else if (this.serialMsg === 's')
+        {
             this.player.setVelocityX(0);
             this.player.anims.play('turn');
         }
 
-        if (this.serialMsg === 'j') {
+        if (this.serialMsg === 'j' && this.player.body.touching.down) {
             if(isCircleCollision(this.d,this.player))
             {
                 this.sound.stopAll();
@@ -192,11 +231,12 @@ class lvl4Scene extends Phaser.Scene {
             }
             this.player.setVelocityY(-250);
             this.sound.play('jump', {volume: 0.1, start: 1, duration: 0.01});
+            this.isLastSpaceDown = 'j';
         }
 
         // was space down (reference tank game)
         // add debounce timer
-        if (this.serialMsg === 't' /*&& !this.isLastSpaceDown*/)
+        if (this.serialMsg === 't' /*&& this.isLastSpaceDown != 't'*/)
         {
 
             if(this.plat2.isActive)
@@ -208,7 +248,7 @@ class lvl4Scene extends Phaser.Scene {
                 this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
             }
         }
-        else if (this.serialMsg === 'b' /*&& !this.isLastSpaceDown*/)
+        else if (this.serialMsg === 'b' /*&& this.isLastSpaceDown != 'b'*/)
         {
             if(this.plat1.isActive)
             {
@@ -219,10 +259,6 @@ class lvl4Scene extends Phaser.Scene {
                 this.sound.play('flip', {volume: 0.3, start: 0, duration: 0.05});
             }
         }
-        // if(this.serialMsg === 'b' || this.serialMsg === 't')
-        // {
-        //     this.isLastSpaceDown = true;
-        // }
 
         // Un-comment this block for keyboard controls
         // if (this.cursors.left.isDown) {
@@ -247,7 +283,7 @@ class lvl4Scene extends Phaser.Scene {
         //     this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
         // }
 
-        // // was space down (reference tank game)
+        // was space down (reference tank game)
         // if (this.cursors.space.isDown && !this.isLastSpaceDown)
         // {
         //     if(this.plat2.isActive)

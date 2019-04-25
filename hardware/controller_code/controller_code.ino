@@ -24,12 +24,13 @@ void setup()
 void loop()
 {
   int currentTime = millis();
-  int dt = prevTime - currentTime;
+  int dt = currentTime - prevTime;
   prevTime = currentTime;
 
   if(dbnce > 0)
   {
     dbnce -= dt;
+//    Serial.print(dbnce);
   }
 
   tilt = digitalRead(tiltpin);
@@ -42,40 +43,50 @@ void loop()
   if(tilt == HIGH) {
     if(dbnce <= 0)
     {
-      Serial.print("t~");
-      dbnce = 2;
+      Serial.print("b~");
+//      dbnce = 100;
     }
     if(buttL == HIGH)
     {
       Serial.print("r~");
     }
-    if(buttR == HIGH)
+    else if(buttR == HIGH)
     {
       Serial.print("l~");
+    }
+    else
+    {
+      Serial.print("s~");
     }
   }
   else
   {
     if(dbnce <= 0)
     {
-      Serial.print("b~");
-      dbnce = 2;
+      Serial.print("t~");
+//      dbnce = 100;
     }
     
     if(buttL == HIGH)
     {
       Serial.print("l~");
+      dbnce = 200;
     }
-    if(buttR == HIGH)
+    else if(buttR == HIGH)
     {
       Serial.print("r~");
+      dbnce = 200;
+    }
+    else
+    {
+      Serial.print("s~");
     }
   }
 
 //  // Movement
   if(buttJ == HIGH)
   {
-    Serial.print("j~");  
+    Serial.print("j~"); 
   }
 //  if(buttL == HIGH)
 //  {
@@ -85,10 +96,6 @@ void loop()
 //  {
 //    Serial.print("r~");
 //  }
-  else
-  {
-//    Serial.print("s~");
-  }
   
-  delay(10);
+  delay(50);
 }

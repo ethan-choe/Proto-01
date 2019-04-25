@@ -28,11 +28,11 @@ class EndScene extends Phaser.Scene {
       this.scene.start('Lvl1Scene')
     }
 
-    if (this.cursors.up.isDown) {
-      this.overlay.classList.add('hidden');
-      // Transition to gameplay
-      this.scene.start('StartScene')
-    }
+    // if (this.cursors.up.isDown) {
+    //   this.overlay.classList.add('hidden');
+    //   // Transition to gameplay
+    //   this.scene.start('StartScene')
+    // }
   }
 }
 

@@ -1,4 +1,4 @@
-int tiltpin = 2;
+ int tiltpin = 2;
 int buttJpin = 7;
 int buttLpin = 4;
 int buttRpin = 8;
@@ -42,33 +42,33 @@ void loop()
   if(tilt == HIGH) {
     if(dbnce <= 0)
     {
-      Serial.print("b~");
-      dbnce = 200;
+      Serial.print("t~");
+      dbnce = 2;
     }
     if(buttL == HIGH)
     {
-      Serial.print("l~");
+      Serial.print("r~");
     }
     if(buttR == HIGH)
     {
-      Serial.print("r~");
+      Serial.print("l~");
     }
   }
   else
   {
     if(dbnce <= 0)
     {
-      Serial.print("t~");
-      dbnce = 200;
+      Serial.print("b~");
+      dbnce = 2;
     }
     
     if(buttL == HIGH)
     {
-      Serial.print("r~");
+      Serial.print("l~");
     }
     if(buttR == HIGH)
     {
-      Serial.print("l~");
+      Serial.print("r~");
     }
   }
 

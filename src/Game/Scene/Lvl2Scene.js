@@ -21,7 +21,7 @@ const plat1Config = [
 const plat2Config = [
   { x: 350, y: 410, asset: 'short2' },
   { x: 500, y: 340, asset: 'short2' },
-  { x: 400, y: 220, asset: 'short2' },
+  { x: 400, y: 230, asset: 'short2' },
   { x: 500, y: 130, asset: 'short2' }
 ]
 
@@ -237,7 +237,7 @@ class lvl2Scene extends Phaser.Scene {
         //         this.sound.stopAll();
         //         this.scene.start('Lvl3Scene');
         //     }
-        //     this.player.setVelocityY(-250);
+        //     this.player.setVelocityY(-350);
         //     this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
         // }
 

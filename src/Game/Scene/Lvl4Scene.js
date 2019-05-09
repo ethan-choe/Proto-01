@@ -283,7 +283,7 @@ class lvl4Scene extends Phaser.Scene {
         //     this.sound.play('jump', {volume: 0.3, start: 1, duration: 0.01});
         // }
 
-        // was space down (reference tank game)
+        // // was space down (reference tank game)
         // if (this.cursors.space.isDown && !this.isLastSpaceDown)
         // {
         //     if(this.plat2.isActive)

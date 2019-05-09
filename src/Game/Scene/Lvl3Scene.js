@@ -25,7 +25,10 @@ const plat1Config = [
   { x: 375, y: 200, asset: 'short1' },
   { x: 375, y: 300, asset: 'short1' },
   { x: 375, y: 450, asset: 'short1' },
-  { x: 525, y: 450, asset: 'short1' }
+  { x: 525, y: 450, asset: 'short1' },
+
+  { x: 700, y: 450, asset: 'short1' },
+  { x: 750, y: 450, asset: 'short1' }
 
 ]
 const plat2Config = [
